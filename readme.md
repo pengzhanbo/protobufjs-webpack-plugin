@@ -1,18 +1,18 @@
-# protobuf-webpack-plugin
+# protobufjs-webpack-plugin
 
 转译protobuf文件为js文件
 
 ### Install
 
 ``` bash
-npm install --save-dev protobuf-webpack-plugin
+npm install --save-dev protobufjs-webpack-plugin
 ```
 
 ### Usage
 
 Add it to your `webpack.config.js`
 ``` js
-var ProtobufPlugin  = require('protobuf-webpack-plugin');
+var ProtobufPlugin  = require('protobufjs-webpack-plugin');
 
 module.exports = {
     plugins: [

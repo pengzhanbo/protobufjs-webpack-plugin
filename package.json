@@ -1,5 +1,5 @@
 {
-  "name": "protobuf-webpack-plugin",
+  "name": "protobufjs-webpack-plugin",
   "version": "0.1.0",
   "description": "protobuf to js",
   "main": "index.js",
@@ -12,7 +12,7 @@
     "protobufjs",
     "webpack",
     "webpack-plugin",
-    "protobuf-webpack-plugin"
+    "protobufjs-webpack-plugin"
   ],
   "author": "pengzhanbo",
   "license": "MIT",
