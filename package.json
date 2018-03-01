@@ -1,11 +1,11 @@
 {
   "name": "protobufjs-webpack-plugin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "protobuf to js",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://volodymyr-lian@github.com/volodymyr-lian/protobuf-webpack-plugin.git"
+    "url": "git+https://volodymyr-lian@github.com/volodymyr-lian/protobufjs-webpack-plugin.git"
   },
   "keywords": [
     "protobuf",
@@ -17,9 +17,9 @@
   "author": "pengzhanbo",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/volodymyr-lian/protobuf-webpack-plugin/issues"
+    "url": "https://github.com/volodymyr-lian/protobufjs-webpack-plugin/issues"
   },
-  "homepage": "https://github.com/volodymyr-lian/protobuf-webpack-plugin#readme",
+  "homepage": "https://github.com/volodymyr-lian/protobufjs-webpack-plugin#readme",
   "devDependencies": {
     "glob": "^7.1.2",
     "make-dir": "^1.2.0",
