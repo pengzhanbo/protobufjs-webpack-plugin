@@ -1,6 +1,6 @@
 {
   "name": "protobufjs-webpack-plugin",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "protobuf to js",
   "main": "index.js",
   "repository": {
@@ -24,5 +24,6 @@
     "glob": "^7.1.2",
     "make-dir": "^1.2.0",
     "protobufjs": "^6.8.6"
-  }
+  } 
 }
+ 

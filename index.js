@@ -29,23 +29,38 @@ function ProtobufPlugin(options) {
 
 ProtobufPlugin.prototype.apply = function (compiler) {
     if (!this.options.input) {
-        console.log('[protobuf plugin] input error');
+        console.error('[protobuf plugin] input error');
         return;
     }
     var self = this;
     // 生成前置命令
     self.setBasicCommand();
-    compiler.plugin('emit', function (compilation, cb) {
-        var files = glob.sync(self.options.input) || [];
-        var multipleFiles = [];
-        files.forEach(function (file) {
-            if (self.watchFile(file)) {
-                compilation.fileDependencies.push(path.resolve(file));
-                multipleFiles.push(file);
-            }
+    if ('hooks' in compiler) {
+        var name = this.constructor.name;
+        compiler.hooks.emit.tapAsync(name, function (compilation, cb) {
+            var files = glob.sync(self.options.input) || [];
+            var multipleFiles = [];
+            files.forEach(function (file) {
+                if (self.watchFile(file)) {
+                    compilation.fileDependencies.push(path.resolve(file));
+                    multipleFiles.push(file);
+                }
+            });
+            self.options.outputType == 0 ? self.singleOutput(files, cb) : self.multipleOutput(multipleFiles, cb);
         });
-        self.options.outputType == 0 ? self.singleOuput(files, cb) : self.multipleOutput(multipleFiles, cb);
-    });
+    } else {
+        compiler.plugin('emit', function (compilation, cb) {
+            var files = glob.sync(self.options.input) || [];
+            var multipleFiles = [];
+            files.forEach(function (file) {
+                if (self.watchFile(file)) {
+                    compilation.fileDependencies.push(path.resolve(file));
+                    multipleFiles.push(file);
+                }
+            });
+            self.options.outputType == 0 ? self.singleOutput(files, cb) : self.multipleOutput(multipleFiles, cb);
+        });
+    }
 };
 
 ProtobufPlugin.prototype.watchFile = function(file) {
@@ -74,7 +89,7 @@ ProtobufPlugin.prototype.setBasicCommand = function () {
 };
 
 // 单文件输出
-ProtobufPlugin.prototype.singleOuput = function (files, cb) {
+ProtobufPlugin.prototype.singleOutput = function (files, cb) {
     var command = [].concat(this.command);
     command = command.concat(files);
     // 输出路径
