@@ -42,7 +42,12 @@ ProtobufPlugin.prototype.apply = function (compiler) {
             var multipleFiles = [];
             files.forEach(function (file) {
                 if (self.watchFile(file)) {
-                    compilation.fileDependencies.push(path.resolve(file));
+                    // Webpack 4 vs 5.
+                    if ('add' in compilation.fileDependencies) {
+                        compilation.fileDependencies.add(path.resolve(file));
+                    } else {
+                        compilation.fileDependencies.push(path.resolve(file));
+                    }
                     multipleFiles.push(file);
                 }
             });
@@ -54,7 +59,12 @@ ProtobufPlugin.prototype.apply = function (compiler) {
             var multipleFiles = [];
             files.forEach(function (file) {
                 if (self.watchFile(file)) {
-                    compilation.fileDependencies.push(path.resolve(file));
+                    // Webpack 4 vs 5.
+                    if ('add' in compilation.fileDependencies) {
+                        compilation.fileDependencies.add(path.resolve(file));
+                    } else {
+                        compilation.fileDependencies.push(path.resolve(file));
+                    }
                     multipleFiles.push(file);
                 }
             });
