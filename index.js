@@ -18,7 +18,8 @@ let defaultOptions = {
     delimited: true,    // 是否需要 delimited 方法
     beautify: true,     // 是否需要美化代码
     comments: true,     // 是否需要代码注释文档
-    convert: true   // 是否需要 from/toObject
+    convert: true,  // 是否需要 from/toObject
+    args: []
 };
 function ProtobufPlugin(options) {
     this.options = options || {};
@@ -85,6 +86,9 @@ ProtobufPlugin.prototype.setBasicCommand = function () {
             command.push('--no-' + key);
         }
     });
+    if (options.args !== undefined) {
+        command = command.concat(options.args);
+    }
     this.command = command;
 };
 
