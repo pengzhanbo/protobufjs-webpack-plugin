@@ -1,4 +1,5 @@
 var pbjs = require('protobufjs/cli/pbjs');
+var pbts = require('protobufjs/cli/pbts');
 var glob = require('glob');
 var path = require('path');
 var fs = require('fs');
@@ -18,7 +19,10 @@ let defaultOptions = {
     delimited: true,    // 是否需要 delimited 方法
     beautify: true,     // 是否需要美化代码
     comments: true,     // 是否需要代码注释文档
-    convert: true   // 是否需要 from/toObject
+    convert: true,  // 是否需要 from/toObject
+    //typescript: {
+    //    args: []
+    //}
 };
 function ProtobufPlugin(options) {
     this.options = options || {};
@@ -88,8 +92,33 @@ ProtobufPlugin.prototype.setBasicCommand = function () {
     this.command = command;
 };
 
+ProtobufPlugin.prototype.generateTypescriptDefinitions = function (file, cb) {
+    var command = [];
+    var options = this.options.typescript;
+    if (typeof options === 'object') {
+        if (options.args !== undefined) {
+            command = command.concat(options.args);
+        }
+    }
+    command.push(file)
+    var outputPath = (/.js$/.test(file) ? file.substring(0, file.length - 3) : file) + '.d.ts'
+    pbts.main(command, function (err, output) {
+        if (err) {
+            console.log('[protobuf plugin] error: ', err);
+            cb();
+        }
+        fs.writeFile(outputPath, output, function (error) {
+            if (error) {
+                console.log('[protobuf plugin] output error: ', error);
+            }
+            cb();
+        });
+    });
+}
+
 // 单文件输出
 ProtobufPlugin.prototype.singleOutput = function (files, cb) {
+    var self = this;
     var command = [].concat(this.command);
     command = command.concat(files);
     // 输出路径
@@ -107,7 +136,11 @@ ProtobufPlugin.prototype.singleOutput = function (files, cb) {
             if (error) {
                 console.log('[protobuf plugin] output error: ', error);
             }
-            cb();
+            if (self.options.typescript) {
+                self.generateTypescriptDefinitions(outputPath, cb)
+            } else {
+                cb();
+            }
         });
     });
 };
@@ -145,6 +178,9 @@ ProtobufPlugin.prototype.multipleOutput = function (files, cb) {
             fs.writeFile(outputPath, output, function (error) {
                 if (error) {
                     console.log('[protobuf plugin] output error: ', error);
+                }
+                if (self.options.typescript) {
+                    self.generateTypescriptDefinitions(outputPath, cb)
                 }
             });
         });
