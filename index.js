@@ -105,13 +105,13 @@ ProtobufPlugin.prototype.generateTypescriptDefinitions = function (file, cb) {
     pbts.main(command, function (err, output) {
         if (err) {
             console.log('[protobuf plugin] error: ', err);
-            cb();
+            if (cb) cb();
         }
         fs.writeFile(outputPath, output, function (error) {
             if (error) {
                 console.log('[protobuf plugin] output error: ', error);
             }
-            cb();
+            if (cb) cb();
         });
     });
 }
@@ -180,7 +180,7 @@ ProtobufPlugin.prototype.multipleOutput = function (files, cb) {
                     console.log('[protobuf plugin] output error: ', error);
                 }
                 if (self.options.typescript) {
-                    self.generateTypescriptDefinitions(outputPath, cb)
+                    self.generateTypescriptDefinitions(outputPath)
                 }
             });
         });
