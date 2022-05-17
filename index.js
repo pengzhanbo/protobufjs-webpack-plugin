@@ -113,9 +113,6 @@ ProtobufPlugin.prototype.singleOutput = function (files, cb) {
 };
 
 ProtobufPlugin.prototype.multipleOutput = function (files, cb) {
-    if (files.length === 0) {
-        cb();
-    }
     var promise = [];
     var self = this;
     var root = path.relative(process.cwd(), this.options.output);
