@@ -113,41 +113,32 @@ ProtobufPlugin.prototype.singleOutput = function (files, cb) {
 };
 
 ProtobufPlugin.prototype.multipleOutput = function (files, cb) {
-    var promise = [];
     var self = this;
     var root = path.relative(process.cwd(), this.options.output);
     mkdir.sync(root);
-    files.forEach(function (file) {
-        promise.push(new Promise(function (resolve, reject) {
+    const promises = files.map(function (file) {
+        return new Promise(function (resolve, reject) {
             let command = [].concat(self.command);
             command.push(file);
             pbjs.main(command, function (err, output) {
                 if (err) {
                     reject(err);
                 } else {
+                    var outputPath = path.join(self.options.output, path.parse(file).name + '.js');
+                    fs.writeFile(outputPath, output, function (err) {
+                        reject(err)
+                    });
                     resolve({
                         output: output,
                         file: file
                     });
                 }
             });
-        }));
-    });
-    Promise.all(promise)
-    .then(function (res) {
-        res.forEach(function (result) {
-            var output = result.output;
-            var file = result.file;
-            var outputPath = path.join(self.options.output, path.parse(file).name + '.js');
-            fs.writeFile(outputPath, output, function (error) {
-                if (error) {
-                    console.log('[protobuf plugin] output error: ', error);
-                }
-            });
         });
+    });
+    Promise.all(promises).then(function () {
         cb();
-    })
-    .catch(function (err) {
+    }).catch(function (err) {
         console.log('[protobuf plugin] promise reject error: ', err);
         cb();
     });
